@@ -27,25 +27,18 @@ TComplex::TComplex(const TComplex& c)
 	return;
 }
 
-//TComplex::operator AComplex() const
-//{
-//	return AComplex(r() * cos(arg()), r() * sin(arg()));
-//}
-
-TComplex::TComplex(const AComplex& c)
-	: _id(++freeId), _r(sqrt(c.re()*c.re() + c.im()*c.im())), _arg(atan2(c.im(), c.re()))
+TComplex::operator AComplex() const
 {
 #ifndef NDEBUG
-	cout << "--AComplex" << c << " was converted to TComplex" << *this << endl;
+	cout << "--TComplex " << *this << " was converted to AComplex. CONSTRUCTION AFTER CONVERSION:" << endl;
 #endif // !NDEBUG
-
-	return;
+	return AComplex(re(), im());
 }
 
 TComplex& TComplex::operator=(const AComplex& c)&
 {
-	r() = sqrt(c.re() * c.re() + c.im() * c.im()); 
-	arg() = atan2(c.im(), c.re()); 
+	r() = c.abs();
+	arg() = c.arg();
 	return *this;
 }
 
@@ -57,7 +50,6 @@ TComplex& TComplex::operator+=(const TComplex& c)
 TComplex& TComplex::operator-=(const TComplex& c)
 {
 	return *this = AComplex(*this) -= c;
-
 }
 
 ostream& operator<<(ostream& o, const TComplex& c)

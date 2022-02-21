@@ -10,17 +10,18 @@ public:
 	class DivisionByZero{};
 	TComplex(const double r = 1, const double arg = 0);
 	TComplex(const TComplex&);
-	TComplex(const AComplex&);
-	//operator AComplex() const;
 	~TComplex() {}
-	TComplex& operator=(const AComplex& c) &;
-	inline TComplex& operator=(const TComplex& c) & { r() = c.r(); arg() = c.arg(); return *this; }
-	inline double& r()& { return _r; }
-	inline double& arg()& { return _arg; }
-	inline double r() const& { return _r; }
-	inline double arg() const& { return _arg; }
-	inline int id() const& { return _id; }
-	inline TComplex& operator*=(const TComplex& c) { r() *= c.r(); arg() += c.arg(); return *this; }
+	operator AComplex() const;
+	TComplex& operator=(const AComplex&) &; //TO OPTIMIZE += AND -=
+	inline TComplex& operator=(const TComplex& c) & { r() = c.r(); arg() = c.arg(); return *this;	}
+	inline int	   id()  const					    { return _id;									}
+	inline double  re()  const						{ return r() * cos(arg());						}
+	inline double  im()  const						{ return r() * sin(arg());						}
+	inline double  r()	 const						{ return _r;									}
+	inline double  arg() const						{ return _arg;									}
+	inline double& r()								{ return _r;									}
+	inline double& arg()							{ return _arg;								    }
+	inline TComplex& operator*=(const TComplex& c)  { r() *= c.r(); arg() += c.arg(); return *this; }
 	inline TComplex& operator/=(const TComplex& c) 
 	{
 		if (c.r() == 0) throw DivisionByZero();
@@ -36,11 +37,11 @@ private:
 	static int freeId;
 };
 
-inline const TComplex operator*(const TComplex& a, const TComplex& b) { return TComplex(a.r() * b.r(), a.arg() + b.arg()); }
-inline const TComplex operator/(const TComplex& a, const TComplex& b) 
+inline const TComplex operator*(TComplex a, const TComplex& b) { return a *= b; }
+inline const TComplex operator/(TComplex a, const TComplex& b) 
 {
 	if (b.r() == 0) throw TComplex::DivisionByZero();
-	return TComplex(a.r() / b.r(), a.arg() - b.arg()); 
+	return a /= b; 
 }
 
 ostream& operator<<(ostream& o, const TComplex& c);
